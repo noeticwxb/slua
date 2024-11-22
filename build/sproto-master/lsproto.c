@@ -45,18 +45,18 @@ LUALIB_API void luaL_setfuncs (lua_State *L, const luaL_Reg *l, int nup) {
 #if LUA_VERSION_NUM < 503
 
 #if LUA_VERSION_NUM < 502
-/*
-static int64_t lua_tointegerx(lua_State *L, int idx, int *isnum) {
+
+static int64_t lua_tointegerxx(lua_State *L, int idx, int *isnum) {
 	if (lua_isnumber(L, idx)) {
 		if (isnum) *isnum = 1;
-		return (int64_t)lua_tointeger(L, idx);
+		return (int64_t)lua_tonumber(L, idx);
 	}
 	else {
 		if (isnum) *isnum = 0;
 		return 0;
 	}
 }
-*/
+
 
 static int lua_absindex (lua_State *L, int idx) {
 	if (idx > 0 || idx <= LUA_REGISTRYINDEX)
@@ -226,7 +226,7 @@ encode(const struct sproto_arg *args) {
 			// use 64bit integer for 32bit architecture.
 			v = (int64_t)(round(vn * args->extra));
 		} else {
-			v = lua_tointegerx(L, -1, &isnum);
+			v = lua_tointegerxx(L, -1, &isnum);
 			if(!isnum) {
 				return luaL_error(L, ".%s[%d] is not an integer (Is a %s)", 
 					args->tagname, args->index, lua_typename(L, lua_type(L, -1)));
@@ -395,12 +395,17 @@ decode(const struct sproto_arg *args) {
 		if (args->extra) {
 			// lua_Integer is 32bit in small lua.
 			int64_t v = *(int64_t*)args->value;
+
 			lua_Number vn = (lua_Number)v;
 			vn /= args->extra;
+
+		
 			lua_pushnumber(L, vn);
 		} else {
 			int64_t v = *(int64_t*)args->value;
-			lua_pushinteger(L, v);
+			lua_Number vn = (lua_Number)v;
+	
+			lua_pushnumber(L, vn);
 		}
 		break;
 	}

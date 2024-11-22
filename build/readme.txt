@@ -1,3 +1,12 @@
+[20221130]
+-build,修复64位包在android11(api 30)运行报错的问题。(bat light userdata point,luajit升到最新v2.1-20220915)
+    https://codeload.github.com/openresty/luajit2/zip/refs/tags/v2.1-20220915
+-修复32位安卓上sproto发送或接收数据超出21亿截断的问题。
+-之前的mac编译环境已经没了，各种尝试后，改为windows+mingw+ndk10e(64位下ndk15c)。
+    mingw：https://pan.baidu.com/s/1c2JzvDQ
+    ndk-r10e：https://dl.google.com/android/repository/android-ndk-r10e-windows-x86_64.zip
+    ndk-r15c：https://dl.google.com/android/repository/android-ndk-r15c-windows-x86_64.zip
+
 20200610
 slua的去掉了luajit的支持，反馈是在arm64上不稳定。找到了openresty维护的分支。用这个吧
 https://github.com/openresty/luajit2/releases
